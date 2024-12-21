@@ -1,5 +1,6 @@
 import User from "../model/user.model.js"
 import Notification from "../model/notification.model.js"
+import cloudinary from 'cloudinary'
 
 //  get existing user profile
 export const getProfile = async (req, res) => {
@@ -7,11 +8,11 @@ export const getProfile = async (req, res) => {
         //  get username
         const { username } = req.params
         //  get user
-        const user = await User.findOne({ username })
+        const user = await User.findOne({ username }).select("-password");
 
         if (!user) return res.status(404).json({ error: `User ${username} not found` })
 
-        res.status(200).json({ user })
+        res.status(200).json(user)
 
     } catch (error) {
         console.log(`get profile error message: ${error}`)
@@ -21,29 +22,30 @@ export const getProfile = async (req, res) => {
 
 //  follow and un-follow
 export const followUnFollowUser = async (req, res) => {
-    try {
-        //  get id
+    try {                                                                                                       
+        //  get id 
         const { id } = req.params
         //  get user
-        const userToModify = await User.findById({ _id: id })
+        const userToModify = await User.findById(id)
         //  get current user
-        const currentUser = await User.findById({ _id: req.user._id })
+        const currentUser = await User.findById(req.user._id)
 
-        if (id === req.user._id) return res.status(400).json({ error: "you can't follow / un-follow" })
+        if (id === req.user._id.toString()) return res.status(400).json({ error: "you can't follow / un-follow" })
 
-        if (!userToModify || !currentUser) return res.status(404).json({ error: "User not found" })
+        if (!userToModify || !currentUser) return res.status(400).json({ error: "User not found" })
 
         //  check if user is following
         const isFollowing = currentUser.following.includes(id)
 
         if (isFollowing) {
-            await User.findByIdAndUpdate({ _id: id }, { $pull: { followers: req.user._id } })
-            await User.findByIdAndUpdate({ _id: req.user._id }, { $pull: { following: id } })
+            await User.findByIdAndUpdate(id, { $pull: { followers: req.user._id } })
+            await User.findByIdAndUpdate(req.user._id , { $pull: { following: id } })
             res.status(200).json({ message: "Un-follow successfully" })
         } else {
-            await User.findByIdAndUpdate({ _id: id }, { $push: { followers: req.user._id } })
-            await User.findByIdAndUpdate({ _id: req.user._id }, { $push: { following: id } })
+            await User.findByIdAndUpdate(id, { $push: { followers: req.user._id } })
+            await User.findByIdAndUpdate(req.user._id, { $push: { following: id } })
             const newNotification = new Notification({ from: req.user._id, to: userToModify._id, type: "follow" })
+            
             await newNotification.save()
             res.status(200).json({ message: "Follow successfully" })
         }
@@ -60,7 +62,7 @@ export const getSuggestedUsers = async (req, res) => {
         //  get current user
         const userId = req.user._id
         //  get user who followed me
-        const userFollowedByMe = await User.findById({ _id: userId }).select('-password')
+        const userFollowedByMe = await User.findById(userId).select('following')
 
         //  get all users except current user and user who followed me
         const users = await User.aggregate([
@@ -80,7 +82,8 @@ export const getSuggestedUsers = async (req, res) => {
         const suggestedUsers = filteredUser.slice(0, 4)
         //  remove password
         suggestedUsers.forEach((user) => user.password = null)
-        res.status(200).json({ suggestedUsers })
+
+        res.status(200).json(suggestedUsers)
     } catch (error) {
 
         console.log(`get suggested users error message: ${error}`)
@@ -96,7 +99,7 @@ export const updateUser = async (req, res) => {
         //  get user
         const { username, fullName, email, currentPassword, newPassword, bio, link } = req.body
         //  get images
-        // let { profileImage, coverImage } = req.body
+        let { profileImage, coverImage } = req.body
 
         //  get current user
         let user = await User.findById({ _id: userId })
@@ -115,29 +118,29 @@ export const updateUser = async (req, res) => {
             user.password = hashedPassword
         }
         // //  upload profile images
-        // if (profileImage) {
-        //     if (user.profileImage) {
-        //         await cloudinary.uploader.destroy(user.profileImage.split("/").pop().split(".")[0])
-        //     }
-        //     const uploadedResponse = await cloudinary.uploader.upload(profileImage, { resource_type: "image" })
-        //     profileImage = uploadedResponse.secure_url
-        // }
-        // //  upload cover images
-        // if (coverImage) {
-        //     if(user.coverImage){
-        //         await cloudinary.uploader.destroy(user.coverImage.split("/").pop().split(".")[0])
-        //     }
-        //     const uploadedResponse = await cloudinary.uploader.upload(coverImage, { resource_type: "image" })
-        //     coverImage = uploadedResponse.secure_url
-        // }
+        if (profileImage) {
+            if (user.profileImage) {
+                await cloudinary.uploader.destroy(user.profileImage.split("/").pop().split(".")[0])
+            }
+            const uploadedResponse = await cloudinary.uploader.upload(profileImage, { resource_type: "image" })
+            profileImage = uploadedResponse.secure_url
+        }
+        //  upload cover images
+        if (coverImage) {
+            if(user.coverImage){
+                await cloudinary.uploader.destroy(user.coverImage.split("/").pop().split(".")[0])
+            }
+            const uploadedResponse = await cloudinary.uploader.upload(coverImage, { resource_type: "image" })
+            coverImage = uploadedResponse.secure_url
+        }
         //  update user
         user.fullName = fullName || user.fullName
         user.username = username || user.username
         user.email = email || user.email
         user.bio = bio || user.bio
         user.link = link || user.link
-        // user.profileImage = profileImg || user.profileImage
-        // user.coverImage = coverImg || user.coverImage
+        user.profileImage = profileImage || user.profileImage
+        user.coverImage = coverImage || user.coverImage
 
         await user.save()
 

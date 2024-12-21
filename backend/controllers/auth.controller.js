@@ -91,8 +91,8 @@ export const logout = async (req, res) => {
 export const getUser = async (req, res) => {
     try {
         //  get user without password
-        const user = await User.findById({ _id: req.user._id }).select("-password")
-        res.status(200).json({ user })
+        const user = await User.findById(req.user._id).select("-password")
+        res.status(200).json(user )
     } catch (error) {
         console.log(`get user error message: ${error}`)
         res.status(500).json({ error: `get user error message: ${error}` })

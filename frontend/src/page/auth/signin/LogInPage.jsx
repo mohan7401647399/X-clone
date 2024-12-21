@@ -1,27 +1,59 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
-
-import { MdOutlineMail } from "react-icons/md";
+import { FaUser } from "react-icons/fa";
 import { MdPassword } from "react-icons/md";
 import XSvg from "../../../components/svgs/x";
+import {  useMutation, useQueryClient } from '@tanstack/react-query'
+import toast from 'react-hot-toast';
+import { BASE_URL } from "../../../constant/url";
+import LoadingSpinner from "../../../components/common/LoadingSpinner";
 
 const LoginPage = () => {
 	const [formData, setFormData] = useState({
 		username: "",
-		password: "",
+		password: "", 
+	});
+
+	const queryClient = useQueryClient()
+
+	const { mutate: login, isPending, isError, error } = useMutation({
+		mutationFn: async ({  username,  password }) => {
+			try {
+				const res = await fetch(`${BASE_URL}/api/auth/login`, {
+					method: 'POST',
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({  username,  password })
+				})
+				const data = await res.json()
+
+				if (!res.ok) throw new Error(data.error || 'something went wrong in signin')
+
+			} catch (error) {
+				console.log(`signin error message: ${error}`)
+				throw error
+			}
+		},
+		//	success message
+		onSuccess: () => {
+			toast.success("Login Success")
+			queryClient.invalidateQueries({
+				queryKey: ['authUser'],
+			})
+		}
 	});
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log(formData);
+		login(formData)
 	};
 
 	const handleInputChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
-	const isError = false;
 
 	return (
 		<div className='max-w-screen-xl mx-auto flex h-screen'>
@@ -33,7 +65,7 @@ const LoginPage = () => {
 					<XSvg className='w-24 lg:hidden fill-white' />
 					<h1 className='text-4xl font-extrabold text-white'>{"Let's"} go.</h1>
 					<label className='input input-bordered rounded flex items-center gap-2'>
-						<MdOutlineMail />
+							<FaUser />
 						<input
 							type='text'
 							className='grow'
@@ -55,8 +87,16 @@ const LoginPage = () => {
 							value={formData.password}
 						/>
 					</label>
-					<button className='btn rounded-full btn-primary text-white'>Login</button>
-					{isError && <p className='text-red-500'>Something went wrong</p>}
+					<button className='btn rounded-full btn-primary text-white'>
+						{
+							isPending ? <LoadingSpinner /> : "Login"
+						}
+					</button>
+					{
+						isError && <p className='text-red-500'>
+							{error.message}
+						</p>
+					}
 				</form>
 				<div className='flex flex-col gap-2 mt-4'>
 					<p className='text-white text-lg'>{"Don't"} have an account?</p>
