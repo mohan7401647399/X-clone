@@ -28,7 +28,6 @@ function App() {
         if (data.error) return null;
 
         if (!response.ok) throw new Error(data.error || 'something went wrong in get auth user')
-        console.log("authUser : ", data)
         return data
 
       } catch (error) {

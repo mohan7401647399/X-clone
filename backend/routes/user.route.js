@@ -7,8 +7,8 @@ const router = express.Router()
 
 //  routers
 router
-    .get("/profile/:username", protectRoute, getProfile)        //  user route
-    .get("/follow/:id", protectRoute, followUnFollowUser)       //  follow and un-follow user route
+    .get("/profile/:username", protectRoute, getProfile)         //  user route
+    .get("/follow/:id", protectRoute, followUnFollowUser)        //  follow and un-follow user route
     .get("/suggested", protectRoute, getSuggestedUsers)          //  suggested user route
     .post('/update', protectRoute, updateUser)                   //  update user route
 export default router

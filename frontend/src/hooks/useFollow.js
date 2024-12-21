@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { BASE_URL } from '../constant/url'
 import { toast } from 'react-hot-toast';
-
+ 
 const useFollow = () => {
     const queryClient = useQueryClient()
     const { mutate: follow, isPending } = useMutation({
@@ -16,8 +16,8 @@ const useFollow = () => {
                 })
                 const data = await response.json()
                 if (!response.ok) throw new Error(data.error || 'something went wrong in follow')
-
                 return data
+
             } catch (error) {
                 console.log(`follow error message: ${error}`)
                 throw error
