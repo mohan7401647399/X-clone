@@ -5,6 +5,7 @@ import daisyUIThemes from "daisyui/src/theming/themes"
 module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx,html}",       // Adjust this path based on your project structure
+    "./public/index.html",
   ],
   theme: {
     extend: {},
