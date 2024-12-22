@@ -33,19 +33,8 @@ export const signup = async (req, res) => {
         if (newUser) {
             generateToken(newUser._id, res)
             await newUser.save()
-            res.status(201).json({
-                user: newUser
-                //  _id: newUser._id,
-                // username: newUser.username,
-                // fullName: newUser.fullName,
-                // email: newUser.email,
-                // followers: newUser.followers,
-                // following: newUser.following,
-                // profileImage: newUser.profileImage,
-                // coverImage: newUser.coverImage,
-                // bio: newUser.bio,
-                // link: newUser.link
-            })
+            
+            res.status(200).json({ message: "Signup successfully" })
         }
 
     } catch (error) {
@@ -92,7 +81,7 @@ export const getUser = async (req, res) => {
     try {
         //  get user without password
         const user = await User.findById(req.user._id).select("-password")
-        res.status(200).json(user )
+        res.status(200).json(user)
     } catch (error) {
         console.log(`get user error message: ${error}`)
         res.status(500).json({ error: `get user error message: ${error}` })

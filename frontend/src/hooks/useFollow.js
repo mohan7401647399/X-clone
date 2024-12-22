@@ -3,7 +3,9 @@ import { BASE_URL } from '../constant/url'
 import { toast } from 'react-hot-toast';
  
 const useFollow = () => {
+    //  query client
     const queryClient = useQueryClient()
+    //  follow hook
     const { mutate: follow, isPending } = useMutation({
         mutationFn: async (userId) => {
             try {
@@ -23,6 +25,7 @@ const useFollow = () => {
                 throw error
             }
         },
+
         onSuccess: () => {
             Promise.all([
                 queryClient.invalidateQueries({ queryKey: ['suggestedUsers'] }),

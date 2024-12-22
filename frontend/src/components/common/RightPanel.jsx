@@ -20,16 +20,15 @@ const RightPanel = () => {
 				})
 				const data = await response.json()
 				if (!response.ok) throw new Error(data.error || 'something went wrong in get auth user')
-				return data
+					return data
 			} catch (error) {
 				console.log(`get auth user error message: ${error}`)
 				throw error
 			}
 		}
 	})
-
+	
 	const { follow, isPending } = useFollow()
-
 	if (suggestedUsers?.length === 0) return <div className="md:w-64 w-0"></div>
 
 	return (
