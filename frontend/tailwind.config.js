@@ -3,7 +3,9 @@ import daisyUIThemes from "daisyui/src/theming/themes"
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}", "./index.html", './public/index.html'],
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx,html}",       // Adjust this path based on your project structure
+  ],
   theme: {
     extend: {},
   },
