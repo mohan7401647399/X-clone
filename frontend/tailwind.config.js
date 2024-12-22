@@ -6,6 +6,7 @@ module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx,html}",       // Adjust this path based on your project structure
     "./public/index.html",
+    "./build/index.html",
   ],
   theme: {
     extend: {},

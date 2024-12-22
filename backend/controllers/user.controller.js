@@ -104,7 +104,7 @@ export const updateUser = async (req, res) => {
         let { profileImage, coverImage } = req.body
 
         //  get current user
-        let user = await User.findById({ _id: userId })
+        let user = await User.findById(userId)
         if (!user) return res.status(404).json({ error: "User not found" })
         if ((!newPassword && currentPassword) || (newPassword && !currentPassword)) return res.status(400).json({ error: "CurrentPassword or NewPassword both are not matched" })
 
@@ -147,7 +147,7 @@ export const updateUser = async (req, res) => {
         await user.save()
 
         user.password = null
-        res.status(200).json({ user })
+        res.status(200).json(user)
 
     } catch (error) {
         console.log(`update user error message: ${error}`)
