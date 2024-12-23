@@ -3,11 +3,21 @@ import daisyUIThemes from "daisyui/src/theming/themes"
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx,html}",       // Adjust this path based on your project structure
-    "./public/index.html",
-    "./build/index.html",
-  ],
+//  content: [
+ //   "./src/**/*.{js,jsx,ts,tsx,html}",       // Adjust this path based on your project structure
+ //   "./public/index.html",
+ //   "./build/index.html",
+ // ],
+  purge: {
+    content: ['./src/**/*.{js,jsx,ts,tsx,html}'],
+    safelist: [
+      'bg-blue-500',
+      'text-center',
+      'hover:opacity-100',
+      // ...
+      'lg:text-right',
+    ]
+  },
   theme: {
     extend: {},
   },
