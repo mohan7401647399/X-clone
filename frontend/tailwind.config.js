@@ -9,11 +9,7 @@ module.exports = {
  //   "./build/index.html",
  // ],
   purge: {
-<<<<<<< HEAD
     content: ['./src/**/*.{js,jsx,ts,tsx,html}'],
-=======
-    content: ['./src/**/*.html'],
->>>>>>> 23d7fcdaf3c8afa26bc6a9d32a8a312662faf270
     safelist: [
       'bg-blue-500',
       'text-center',
