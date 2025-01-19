@@ -27,12 +27,13 @@ cloudinary.config({
 //  cors config
 app.use(cors({
     origin: 'http://localhost:3000',
-    credentials: true}))
+    credentials: true
+}))
 
 app.use(cookieParser())                          //  allow to receive cookie
     .use(express.json({ limit: "5mb" }))         //  allow to receive json data with 5mb limit & default limit is 100kb
     .use(express.urlencoded({ extended: true })) //  allow to receive form data
-    
+
 //  Routes
 app.use("/api/auth", authRoute)                         //  auth route
     .use("/api/users", userRoute)                        //  user route
@@ -42,7 +43,7 @@ app.use("/api/auth", authRoute)                         //  auth route
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '/frontend/build')))
     app.use("*", (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'frontend', 'build','index.html'))
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
     })
 }
 
