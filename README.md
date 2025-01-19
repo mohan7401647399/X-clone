@@ -2,6 +2,9 @@
 
 A fully functional Twitter Clone built using the MERN stack (MongoDB, Express, React, and Node.js). This application replicates core features of Twitter, such as posting tweets, following users, liking tweets, and more, providing a seamless social media experience.
 
+## Live link - https://twitter-clone-mern-j4di.onrender.com/
+
+
 ---
 
 ## Features
@@ -144,8 +147,8 @@ Contributions are welcome! Please fork this repository and submit a pull request
 
 ## Contact
 For any questions or feedback, feel free to reach out:
-- Email: your-email@example.com
-- GitHub: [your-username](https://github.com/your-username)
+- Email: mtm.kcs@gmail.com
+- GitHub: [[your-username](https://github.com/your-username)](https://github.com/mohan7401647399)
 
 ---
 
