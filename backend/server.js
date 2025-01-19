@@ -25,10 +25,12 @@ cloudinary.config({
 })
 
 //  cors config
-app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true
-}))
+if (process.env.NODE_ENV === "production") {
+    app.use(cors({
+        origin: process.env.CLIENT_URL,
+        credentials: true,
+    }))
+}
 
 app.use(cookieParser())                          //  allow to receive cookie
     .use(express.json({ limit: "5mb" }))         //  allow to receive json data with 5mb limit & default limit is 100kb
