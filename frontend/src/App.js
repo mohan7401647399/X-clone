@@ -16,7 +16,7 @@ function App() {
   const { data: authUser, isLoading } = useQuery({
     queryKey: ['authUser'],
     queryFn: async () => {
-      try { 
+      try {
         const response = await fetch(`${BASE_URL}/api/auth/get`, {
           method: 'GET',
           credentials: 'include',
@@ -38,19 +38,19 @@ function App() {
     retry: false
   })
 
-  if(isLoading) return <div className="flex justify-center items-center h-screen"><LoadingSpinner size="lg"/> </div>
+  if (isLoading) return <div className="flex justify-center items-center h-screen"><LoadingSpinner size="lg" /> </div>
 
   return (
     <div className='flex max-w-6xl mx-auto'>
-      {authUser && <Sidebar />}
-        <Routes>
-          <Route path="/" element={authUser ? <HomePage /> : <LogInPage /> } />
-          <Route path="/login" element={!authUser ? <LogInPage /> : <HomePage /> } />
-          <Route path="/signup" element={!authUser ? <SignupPage /> : <HomePage /> } />
-          <Route path="/notifications" element={authUser ? <NotificationPage /> : <LogInPage /> } />
-        <Route path="/profile/:username" element={authUser ? <ProfilePage /> : <LogInPage /> } />
+      { authUser && <Sidebar /> }
+      <Routes>
+        <Route path="/" element={ authUser ? <HomePage /> : <LogInPage /> } />
+        <Route path="/login" element={ !authUser ? <LogInPage /> : <HomePage /> } />
+        <Route path="/signup" element={ !authUser ? <SignupPage /> : <HomePage /> } />
+        <Route path="/notifications" element={ authUser ? <NotificationPage /> : <LogInPage /> } />
+        <Route path="/profile/:username" element={ authUser ? <ProfilePage /> : <LogInPage /> } />
       </Routes>
-      {authUser && <RightPanel />}
+      { authUser && <RightPanel /> }
       <Toaster />
     </div>
   );
