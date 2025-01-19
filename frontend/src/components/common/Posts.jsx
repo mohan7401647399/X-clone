@@ -15,7 +15,7 @@ const Posts = ({ feedType, username, userId }) => {
 			case "posts":
 				return `${BASE_URL}/api/posts/user/${username}`
 			case "likes":
-				return `${BASE_URL}/api/posts/likes/${userId}`	
+				return `${BASE_URL}/api/posts/likes/${userId}`
 			default:
 				return `${BASE_URL}/api/posts/getall`
 		}
@@ -23,7 +23,7 @@ const Posts = ({ feedType, username, userId }) => {
 	const POST_END_POINT = getPostEndPoint()
 
 	//	get posts
-	const { data: posts, isLoading ,refetch, isRefetching } = useQuery({
+	const { data: posts, isLoading, refetch, isRefetching } = useQuery({
 		queryKey: ['posts'],
 		queryFn: async () => {
 			try {
@@ -36,7 +36,6 @@ const Posts = ({ feedType, username, userId }) => {
 				})
 				const data = await response.json()
 				if (!response.ok) throw new Error(data.error || 'something went wrong in get auth user')
-				console.log("authUser : ", data)
 				return data
 
 			} catch (error) {
@@ -48,25 +47,25 @@ const Posts = ({ feedType, username, userId }) => {
 
 	useEffect(() => {
 		refetch()
-	},[refetch, feedType])
-	
+	}, [refetch, feedType])
+
 	return (
 		<>
-			{(isLoading || isRefetching) && (
+			{ (isLoading || isRefetching) && (
 				<div className='flex flex-col justify-center'>
 					<PostSkeleton />
 					<PostSkeleton />
 					<PostSkeleton />
 				</div>
-			)}
-			{ !isLoading && posts?.length === 0 && <p className='text-center my-4'>No posts in this tab. Switch 👻</p>}
+			) }
+			{ !isLoading && posts?.length === 0 && <p className='text-center my-4'>No posts in this tab. Switch 👻</p> }
 			{ !isLoading && posts && (
 				<div>
 					{ posts.map((post) => (
-						<Post key={post._id} post={post} />
-					))}
+						<Post key={ post._id } post={ post } />
+					)) }
 				</div>
-			)}
+			) }
 		</>
 	);
 };
